@@ -2,6 +2,8 @@ package com.kkori.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kkori.dto.interview.request.CommonRoomRequest;
@@ -261,6 +263,75 @@ class RealWebSocketTest {
             assertThat(response).isNotNull();
             assertThat(response.get("type")).isEqualTo("error");
 
+        } catch (AssertionError e) {
+            printQueuedMessages();
+            throw e;
+        }
+    }
+
+    @Test
+    @DisplayName("역할 바꾸기 WebSocket API 테스트")
+    void rolesSwapTest() throws Exception {
+        // given - 테스트 방 ID 설정 및 서비스 모킹
+        String testRoomId = "TEST_ROLE_SWAP_ROOM_789";
+        doNothing().when(interviewSessionService).swapRoles(testRoomId);
+        
+        // 방 토픽 구독 (역할 바꾸기 알림을 받기 위해)
+        WebSocketTestHelper.MessageSubscriber roomSubscriber = 
+                testHelper.subscribeToRealRoomTopic(stompSession, testRoomId);
+        
+        try {
+            // when - 역할 바꾸기 요청 전송
+            CommonRoomRequest swapRequest = new CommonRoomRequest(testRoomId);
+            stompSession.send("/app/roles-swap", swapRequest);
+            
+            // then - 역할 바뀜 알림 수신 확인
+            Map<String, Object> response = roomSubscriber.waitForMessage("roles-swapped", 10);
+            
+            assertThat(response).isNotNull();
+            assertThat(response.get("type")).isEqualTo("roles-swapped");
+            
+            // SuccessResponse 구조 확인
+            @SuppressWarnings("unchecked")
+            Map<String, Object> dataMap = (Map<String, Object>) response.get("data");
+            assertThat(dataMap.get("message")).isEqualTo("면접관과 면접자 역할이 변경되었습니다");
+            assertThat(dataMap.get("timestamp")).isNotNull();
+            
+        } catch (AssertionError e) {
+            printQueuedMessages();
+            throw e;
+        } finally {
+            // 정리
+            unsubscribeSafe(roomSubscriber);
+        }
+    }
+
+    @Test
+    @DisplayName("역할 바꾸기 실패 시 에러 응답 테스트") 
+    void rolesSwapErrorTest() throws Exception {
+        // given - 서비스에서 예외 발생하도록 설정
+        String testRoomId = "INVALID_ROOM_FOR_ROLE_SWAP";
+        doThrow(new RuntimeException("역할 변경 실패"))
+                .when(interviewSessionService).swapRoles(testRoomId);
+        
+        try {
+            // when - 역할 바꾸기 요청 전송
+            CommonRoomRequest swapRequest = new CommonRoomRequest(testRoomId);
+            stompSession.send("/app/roles-swap", swapRequest);
+            
+            // then - 에러 응답 수신 확인
+            Map<String, Object> response = personalSubscriber.waitForMessage("error", 10);
+            
+            assertThat(response).isNotNull();
+            assertThat(response.get("type")).isEqualTo("error");
+            
+            // ErrorResponse 구조 확인
+            @SuppressWarnings("unchecked")
+            Map<String, Object> dataMap = (Map<String, Object>) response.get("data");
+            assertThat(dataMap.get("error")).isEqualTo("역할 변경에 실패했습니다.");
+            assertThat(dataMap.get("message")).isEqualTo("역할 변경 실패");
+            assertThat(dataMap.get("timestamp")).isNotNull();
+            
         } catch (AssertionError e) {
             printQueuedMessages();
             throw e;
