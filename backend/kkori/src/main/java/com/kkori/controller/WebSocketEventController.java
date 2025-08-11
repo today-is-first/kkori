@@ -113,6 +113,25 @@ public class WebSocketEventController {
         }
     }
 
+    @MessageMapping("/roles-swap")
+    public void handleRolesSwap(@Payload CommonRoomRequest request, SimpMessageHeaderAccessor headerAccessor) {
+        Long authenticatedUserId = requireAuthenticatedUserId(headerAccessor);
+
+        try {
+            String roomId = request.getRoomId();
+            interviewSessionService.swapRoles(roomId);
+
+            SuccessResponse response = new SuccessResponse(
+                    InterviewMessages.ROLES_SWAPPED,
+                    String.valueOf(System.currentTimeMillis())
+            );
+            broadcastToRoom(roomId, "roles-swapped", response);
+
+        } catch (Exception e) {
+            sendErrorToUser(authenticatedUserId, ExceptionCode.ROLE_SWAP_FAILED, e.getMessage());
+        }
+    }
+
     // ==================== 면접 진행 ====================
 
     @MessageMapping("/interview-start")

@@ -31,6 +31,11 @@ public final class InterviewMessages {
     public static final String USER_EXITED = "사용자가 방을 나갔습니다";
     
     /**
+     * 역할 변경 관련 메시지
+     */
+    public static final String ROLES_SWAPPED = "면접관과 면접자 역할이 변경되었습니다";
+    
+    /**
      * 면접 진행 관련 메시지
      */
     public static final String INTERVIEW_COMPLETED = "면접이 완료되었습니다";

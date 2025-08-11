@@ -56,6 +56,7 @@ public enum ExceptionCode {
     INTERVIEW_END_FAILED(7005, "면접 종료에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     ANSWER_PROCESSING_FAILED(7006, "답변 처리에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     QUESTION_SELECT_FAILED(7007, "질문 선택에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    ROLE_SWAP_FAILED(7008, "역할 변경에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // ==== QuestionSet 생성 관련 ====
     EMPTY_QUESTIONS(8001, "질문이 비어있습니다.", HttpStatus.BAD_REQUEST),
