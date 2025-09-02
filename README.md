@@ -89,7 +89,7 @@ MVP 개발 후 최초로 LCP를 측정했을 때 2.5s가 나왔습니다.
 최종적으로 **LCP 2.5초에서 0.6초로 개선**하였고, `Performance`, `SEO` 항목을 100점으로 만들 수 있었습니다.
 
 
-[Wiki로 자세히 보기](https://github.com/today-is-first/kkori/wiki/Web-Core-Vital-%EA%B0%9C%EC%84%A0%ED%95%98%EA%B8%B0)
+[Wiki로 자세히 보기](https://github.com/today-is-first/kkori/wiki/Core-Web-Vital-%EA%B0%9C%EC%84%A0%EA%B8%B0)
 
 <br/>
 <br/>
