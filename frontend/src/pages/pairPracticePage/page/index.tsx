@@ -22,8 +22,8 @@ function PairPracticePage() {
     let cancelled = false;
     (async () => {
       try {
-        const { waitForReady } = useMediaStreamStore.getState();
-        await waitForReady();
+        const { initMyStream } = useMediaStreamStore.getState();
+        await initMyStream();
       } catch (e) {
         console.error('getUserMedia failed', e);
       }
