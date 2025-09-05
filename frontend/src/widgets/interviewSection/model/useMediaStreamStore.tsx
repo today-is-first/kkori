@@ -14,11 +14,9 @@ interface MediaStreamState {
   blob: Blob | null;
   timerId: NodeJS.Timeout | null;
 
-  // 준비 상태/에러
   isReady: boolean;
   error: string | null;
 
-  // 내부 대기자
   _readyPromise: Promise<MediaStream> | null;
   _resolveReady?: (s: MediaStream) => void;
   _rejectReady?: (e: unknown) => void;
@@ -37,8 +35,6 @@ interface MediaStreamActions {
   setSubStreamType: (subStreamType: MediaStreamType) => void;
   setBlob: (blob: Blob | null) => void;
   setTimerId: (timerId: NodeJS.Timeout | null) => void;
-
-  // 핵심 추가
   initMyStream: () => Promise<MediaStream>;
   waitForReady: () => Promise<MediaStream>;
 }
@@ -82,7 +78,6 @@ const useMediaStreamStore = create<MediaStreamState & MediaStreamActions>(
 
     reset: () => {
       const { myStream, myRecorder } = get();
-      // 트랙 정리
       try {
         myStream?.getTracks().forEach(t => t.stop());
       } catch {}
