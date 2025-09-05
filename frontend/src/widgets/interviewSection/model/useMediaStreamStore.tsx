@@ -63,16 +63,6 @@ const initialState: Omit<
   error: null,
 };
 
-function createDeferred<T>() {
-  let resolve!: (v: T) => void;
-  let reject!: (e: unknown) => void;
-  const p = new Promise<T>((res, rej) => {
-    resolve = res;
-    reject = rej;
-  });
-  return { p, resolve, reject };
-}
-
 const useMediaStreamStore = create<MediaStreamState & MediaStreamActions>(
   (set, get) => ({
     ...initialState,
@@ -114,10 +104,10 @@ const useMediaStreamStore = create<MediaStreamState & MediaStreamActions>(
       if (myStream) return myStream;
 
       if (_readyPromise) return _readyPromise;
+      const { promise, resolve, reject } = Promise.withResolvers<MediaStream>();
 
-      const { p, resolve, reject } = createDeferred<MediaStream>();
       set({
-        _readyPromise: p,
+        _readyPromise: promise,
         _resolveReady: resolve,
         _rejectReady: reject,
         error: null,
@@ -145,7 +135,7 @@ const useMediaStreamStore = create<MediaStreamState & MediaStreamActions>(
         });
 
         resolve(stream);
-        return p;
+        return promise;
       } catch (e) {
         set({ error: (e as Error)?.message ?? 'getUserMedia 실패' });
         get()._rejectReady?.(e);
