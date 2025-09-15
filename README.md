@@ -21,11 +21,16 @@
 <br/>
 <br/>
 
+## 프로젝트 소개 영상
+
+[![프로젝트 소개 영상](https://github.com/user-attachments/assets/77c2c8d0-fc96-4e3f-b073-1030ea0bc256)](https://www.youtube.com/watch?v=XFgzwHlbUT4)
+
+
 ## 👋 프로젝트 소개
 
 ### 🎤 *"AI 기반 실시간 면접 연습 플랫폼"*
 
-**Kkori**는 사용자가 **WebSocket와 WebRTC를 활용해 실시간으로 면접 연습**하고,  
+**Kkori**는 사용자가 **WebSocket과 WebRTC를 활용해 실시간으로 면접을 연습**하고,  
 **AI 기반 음성 인식과 꼬리질문 생성**으로 실제 면접과 같은 경험을 제공하는 **면접 연습 서비스**입니다.
 
 - 사용자는 **혼자 연습** 또는 **둘이서 연습** 모드를 선택할 수 있어요.
